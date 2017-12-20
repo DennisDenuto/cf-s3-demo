@@ -1,14 +1,11 @@
 package com.gopivotal.cf.samples.s3.connector.spring;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.gopivotal.cf.samples.s3.connector.cloudfoundry.S3ServiceInfo;
 import com.gopivotal.cf.samples.s3.repository.S3;
 import org.apache.commons.logging.Log;
@@ -39,15 +36,15 @@ public class S3ServiceConnectorCreator extends AbstractServiceConnectorCreator<S
 
         AmazonS3 amazonS3 = builder.build();
 
-        try {
-            amazonS3.createBucket(
-                    new CreateBucketRequest(serviceInfo.getBucket()).withCannedAcl(CannedAccessControlList.PublicRead)
-            );
-        } catch (AmazonServiceException e) {
-            if (!e.getErrorCode().equals("BucketAlreadyOwnedByYou")) {
-                throw e;
-            }
-        }
+//        try {
+//            amazonS3.createBucket(
+//                    new CreateBucketRequest(serviceInfo.getBucket()).withCannedAcl(CannedAccessControlList.PublicRead)
+//            );
+//        } catch (AmazonServiceException e) {
+//            if (!e.getErrorCode().equals("BucketAlreadyOwnedByYou")) {
+//                throw e;
+//            }
+//        }
         log.info("Using S3 Bucket: " + serviceInfo.getBucket());
         return new S3(amazonS3, serviceInfo.getBucket(), serviceInfo.getBaseUrl());
     }
