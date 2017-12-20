@@ -35,7 +35,7 @@ public class S3Controller {
     public String index(Model model) {
         model.addAttribute("message", "Hello Boot!");
 
-        Iterator<S3File> images = s3.getAll();
+        Iterable<S3File> images = s3.getAll();
         model.addAttribute("images", images);
 
         return "index";

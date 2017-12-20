@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 public class S3 {
 
@@ -47,7 +48,7 @@ public class S3 {
     }
 
 
-    public Iterator<S3File> getAll() {
+    public Iterable<S3File> getAll() {
         ObjectListing objectListing = amazonS3.listObjects(bucket);
 
         return objectListing.getObjectSummaries().stream().map(s3ObjectSummary -> {
@@ -76,6 +77,6 @@ public class S3 {
             }
 
             return new S3File(object.getKey(), bucket, object.getKey(), temp.toFile());
-        }).iterator();
+        }).collect(Collectors.toList());
     }
 }
