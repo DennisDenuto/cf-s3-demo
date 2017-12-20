@@ -56,7 +56,7 @@ public class S3 {
 
             Path temp = null;
             try {
-                temp = Files.createTempFile("/tmp/", "temp");
+                temp = Files.createTempFile("tmp", "temp");
             } catch (IOException e) {
                 e.printStackTrace();
             }
