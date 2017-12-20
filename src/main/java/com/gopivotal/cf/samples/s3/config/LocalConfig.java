@@ -47,15 +47,15 @@ public class LocalConfig {
 
         AmazonS3 amazonS3 = builder.build();
 
-        try {
-            amazonS3.createBucket(
-                    new CreateBucketRequest(s3Properties.getBucket()).withCannedAcl(CannedAccessControlList.PublicRead)
-            );
-        } catch (AmazonServiceException e) {
-            if (!e.getErrorCode().equals("BucketAlreadyOwnedByYou")) {
-                throw e;
-            }
-        }
+//        try {
+//            amazonS3.createBucket(
+//                    new CreateBucketRequest(s3Properties.getBucket()).withCannedAcl(CannedAccessControlList.PublicRead)
+//            );
+//        } catch (AmazonServiceException e) {
+//            if (!e.getErrorCode().equals("BucketAlreadyOwnedByYou")) {
+//                throw e;
+//            }
+//        }
         log.info("Using S3 Bucket: " + s3Properties.getBucket());
         return new S3(amazonS3, s3Properties.getBucket(), s3Properties.getBaseUrl());
     }
