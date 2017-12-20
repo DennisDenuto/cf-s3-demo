@@ -1,12 +1,20 @@
 package com.gopivotal.cf.samples.s3.repository;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 
-import java.io.File;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class S3 {
 
@@ -26,12 +34,12 @@ public class S3 {
 
     public URL put(S3File file) throws MalformedURLException {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, file.getActualFileName(), file.getFile())
-            .withCannedAcl(CannedAccessControlList.PublicRead);
+                .withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3.putObject(putObjectRequest);
         URL url;
         if (baseUrl == null) {
             url = amazonS3.getUrl(bucket, file.getActualFileName());
-        }else{
+        } else {
             url = new URL(baseUrl + "/" + bucket + "/" + file.getActualFileName());
         }
         return url;
@@ -41,4 +49,37 @@ public class S3 {
         amazonS3.deleteObject(bucket, file.getActualFileName());
     }
 
+
+    public Iterator<S3File> getAll() {
+        ObjectListing objectListing = amazonS3.listObjects(bucket);
+
+        return objectListing.getObjectSummaries().stream().map(s3ObjectSummary -> {
+            S3Object object = amazonS3.getObject(bucket, s3ObjectSummary.getKey());
+
+            Path temp = null;
+            try {
+                temp = Files.createTempFile("/tmp/", "temp");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                FileOutputStream outputStream = new FileOutputStream(temp.toFile());
+                int read = 0;
+                byte[] bytes = new byte[1024];
+
+                InputStream inputStream = object.getObjectContent();
+
+                while ((read = inputStream.read(bytes)) != -1) {
+                    outputStream.write(bytes, 0, read);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return new S3File(object.getKey(), bucket, object.getKey(), temp.toFile());
+        }).iterator();
+    }
 }

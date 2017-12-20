@@ -20,7 +20,7 @@ public class S3File {
     public S3File() {
     }
 
-    S3File(String id, String bucket, String name, File file) {
+   public S3File(String id, String bucket, String name, File file) {
         this.id = id;
         this.bucket = bucket;
         this.name = name;

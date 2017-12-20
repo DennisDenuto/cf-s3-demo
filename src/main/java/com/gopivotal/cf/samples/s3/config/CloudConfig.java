@@ -15,17 +15,6 @@ import javax.sql.DataSource;
 public class CloudConfig extends AbstractCloudConfig {
 
     @Bean
-    public DataSource dataSource() {
-        // Default pool size to 4 connections to support ClearDB Spark (free)
-        PooledServiceConnectorConfig.PoolConfig poolConfig =
-                new PooledServiceConnectorConfig.PoolConfig(4, 200);
-
-        DataSourceConfig config = new DataSourceConfig(poolConfig, new DataSourceConfig.ConnectionConfig(""));
-
-        return connectionFactory().dataSource(config);
-    }
-
-    @Bean
     public S3 s3() {
         return connectionFactory().service(S3.class);
     }

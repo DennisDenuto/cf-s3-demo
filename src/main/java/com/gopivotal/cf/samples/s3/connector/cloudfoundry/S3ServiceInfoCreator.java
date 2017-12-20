@@ -19,7 +19,7 @@ public class S3ServiceInfoCreator extends CloudFoundryServiceInfoCreator<S3Servi
         String accessKey = (String) credentials.get("accessKey");
         String secretKey = (String) credentials.get("secretKey");
         String bucket = (String) credentials.get("bucket");
-        String region = (String) credentials.getOrDefault("region", "us-west-1");
+        String region = (String)  credentials.getOrDefault("region", "us-west-1");
         String endpoint = (String) credentials.get("endpoint");
         Boolean pathStyleAccess = Boolean.valueOf((String) credentials.getOrDefault("pathStyleAccess", "false"));
         String baseUrl = (String) credentials.get("baseUrl");
