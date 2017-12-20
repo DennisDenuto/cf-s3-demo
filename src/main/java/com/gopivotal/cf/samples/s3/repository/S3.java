@@ -76,7 +76,10 @@ public class S3 {
                 e.printStackTrace();
             }
 
-            return new S3File(object.getKey(), bucket, object.getKey(), temp.toFile());
+            S3File s3File = new S3File(object.getKey(), bucket, object.getKey(), temp.toFile());
+            URL url = amazonS3.getUrl(bucket, object.getKey());
+            s3File.setUrl(url);
+            return s3File;
         }).collect(Collectors.toList());
     }
 }
